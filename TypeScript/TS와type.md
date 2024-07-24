@@ -4,7 +4,7 @@
 > JavaScript는 **dynamically typed**로 런타임 환경 때 타입이 결정이 되는데, 이로 인해 사용자가 어플리케이션을 사용하면서 에러가 발생하는 문제점이 있다. TS는 이러한 문제를 보완하여, 개발시 실시간으로 검사를 받을 수 있어 안정적이고 확장이 쉬운 `객체 지향 프로그래밍`(Object Oriented Programming)이 가능하다
 
 - statically typed: 컴파일러시 type이 결정되고 확인된다 ex) python, JavaScript
-- dynamicall typed: 런타임 환경에서 type이 결정되고 확인된다 ex) Java, TypeScript
+- dynamically typed: 런타임 환경에서 type이 결정되고 확인된다 ex) Java, TypeScript
 
 <br/>
 

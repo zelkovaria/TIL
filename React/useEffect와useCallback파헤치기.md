@@ -171,10 +171,11 @@ export default Example;
 
 1번 코드와 2번 코드별 실행 결과는 아래와 같다
 
-![1번](https://github.com/user-attachments/assets/350811cd-f082-4232-a4f9-f9d8302825f9)
+![1번](https://github.com/user-attachments/assets/ad9fba2c-431d-41cb-9547-1e26be064134)
+
 1번
 
-![2번](https://github.com/user-attachments/assets/7b27b3cd-c29d-4e9a-b2a1-38c4b32012fa)
+![2번](https://github.com/user-attachments/assets/b779f702-2ba9-4b4e-bc16-180577a7c7a4)
 
 2번
 

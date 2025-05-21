@@ -1,4 +1,4 @@
-> 본 게시물에서 등장하는 ‘길드’ 키워드는 실제 디스코드의 ‘서버’와 같은 맥락입니다.
+> 본 게시물에서 등장하는 ‘길드’ 키워드는 실제 디스코드의 ‘서버’와 동일한 개념입니다.
 > 개발시 백엔드 팀원들의 혼선을 방지하고자 **길드(Guild)** 로 사용중임을 감안해주시면 감사하겠습니다 :)
 
 ## 💭 단계별 modal 전환 고민 과정
@@ -55,12 +55,66 @@ const [guildType, setGuildType] = useState<"private" | "public" | null>(null);
 
 ## Funnel 구조로의 전환
 
-이러한 문제점들을 해결하기 위해 [toss slash](https://toss.im/slash-23/session-detail/A1-3)를 참고하여 **Funnel** **구조를 도입**했습니다.
+이러한 문제점들을 해결하기 위해 [toss slash](https://toss.im/slash-23/session-detail/A1-3)에서 아이디어를 얻어 **외부 라이브러리 없이 Funnel 구조를 직접 구현해 적용**했습니다.
 
 ### **Funnel 구조란?**
 
 - Funnel은 사용자가 어떤 목표 지점(ex: 가입 완료)에 도달하기까지 **여러 단계를 거치는 흐름**을 의미합니다.
-- 마케팅, 제품 설계 등에서 자주 사용되며, 토스에서는 이런 흐름을 손쉽게 구성할 수 있도록 useFunnel 훅을 만들었습니다.
+  일반적으로 마케팅이나 제품 설계 등에서 사용되며, UI에서도 단계별 플로우를 제어할 때 유용합니다.
+- 토스에서는 이를 위해 useFunnel이라는 훅을 사용하지만 본 포스팅에서는 해당 라이브러리를 사용하지 않고 **직접 커스텀 훅**과 **컴포넌트**를 구현했습니다.
+
+## 직접 구현한 Funnel 구조
+
+```tsx
+// 커스텀 훅
+const useFunnel = <T extends string>({
+  defaultStep,
+  stepList,
+}: UseFunnelProps<T>) => {
+  const [currentStep, setCurrentStep] = useState(defaultStep);
+  const currentIndex = stepList.indexOf(currentStep);
+
+  const moveToNextStep = () => {
+    if (currentIndex < stepList.length - 1) {
+      setCurrentStep(stepList[currentIndex + 1]);
+    }
+  };
+
+  const moveToPrevStep = () => {
+    if (currentIndex > 0) {
+      setCurrentStep(stepList[currentIndex - 1]);
+    }
+  };
+
+  return {
+    Funnel,
+    Step,
+    currentStep,
+    moveToNextStep,
+    moveToPrevStep,
+  };
+};
+```
+
+```tsx
+// Funnel과 Step 컴포넌트
+const Funnel = <T extends string>({
+  children,
+  currentStep,
+}: FunnelProps<T>) => {
+  const targetStep = children.find((step) => step.props.name === currentStep);
+  if (!targetStep) {
+    throw new Error(
+      `${currentStep} 단계에 해당하는 컴포넌트가 존재하지 않습니다.`
+    );
+  }
+  return <>{targetStep}</>;
+};
+
+Funnel.Step = function Step<T extends string>({ children }: StepProps<T>) {
+  return <>{children}</>;
+};
+```
 
 ### Funnel 구조 적용 방식
 
@@ -102,4 +156,5 @@ const handleChangeModal = () => {
 
 ## **📎 참고**
 
-> 이 구조는 [토스의 Funnel 설계 방식](https://fe-developers.kakaoent.com/2022/220731-composition-component/)을 참고했습니다.
+> Funnel 개념 및 설계 아이디어는
+> <Toss Slash 23 세션: 사용자의 흐름을 Funnel로 관리하기>에서 참고했습니다.
